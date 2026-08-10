@@ -1,0 +1,7 @@
+{
+  "name": "lauraboccio",
+  "private": true,
+  "scripts": {
+    "generate": "node scripts/generate-item.js"
+  }
+}
