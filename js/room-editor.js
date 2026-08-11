@@ -12,6 +12,7 @@ const FIXED_WIDTH = Number(document.body.dataset.width) || null;
 const FIXED_HEIGHT = Number(document.body.dataset.height) || null;
 const BACKGROUND = document.body.dataset.background || null;
 const STORAGE_KEY = `room-layout:${ROOM}`;
+const EDIT_MODE_KEY = `room-edit-mode:${ROOM}`;
 const CLICK_DRAG_THRESHOLD = 4; // px of movement below which a mouseup counts as a click, not a drag
 
 const canvas = new fabric.Canvas("room-canvas", { selection: true });
@@ -19,6 +20,7 @@ canvas.perPixelTargetFind = true;
 canvas.targetFindTolerance = 4;
 
 let itemsById = {};
+let editMode = localStorage.getItem(EDIT_MODE_KEY) === "1";
 
 function resizeCanvas() {
   const wrapper = document.getElementById("canvas-wrapper");
@@ -109,6 +111,8 @@ async function addItemToRoom(item, placement = {}) {
         scaleY: placement.scaleY ?? 0.3,
         cornerStyle: "circle",
         transparentCorners: false,
+        selectable: editMode,
+        hoverCursor: editMode ? "move" : (item.link ? "pointer" : "default"),
       });
       img.itemId = item.id;
       canvas.add(img);
@@ -209,6 +213,32 @@ function showLinkConfirm(item) {
   };
 }
 
+function applyEditMode() {
+  document.body.classList.toggle("edit-mode", editMode);
+  canvas.selection = editMode;
+  canvas.getObjects().forEach((obj) => {
+    obj.selectable = editMode;
+    const item = itemsById[obj.itemId];
+    obj.hoverCursor = editMode ? "move" : (item && item.link ? "pointer" : "default");
+  });
+  if (!editMode) {
+    canvas.discardActiveObject();
+    hideSelectionPanel();
+  }
+  canvas.renderAll();
+
+  const toggleBtn = document.getElementById("edit-toggle");
+  if (toggleBtn) toggleBtn.textContent = editMode ? "Done Editing" : "Edit";
+
+  localStorage.setItem(EDIT_MODE_KEY, editMode ? "1" : "0");
+  resizeCanvas(); // sidebar/reset-button visibility changes the wrapper size
+}
+
+document.getElementById("edit-toggle")?.addEventListener("click", () => {
+  editMode = !editMode;
+  applyEditMode();
+});
+
 document.getElementById("reset-layout")?.addEventListener("click", () => {
   if (confirm("Reset this room back to its original layout?")) {
     localStorage.removeItem(STORAGE_KEY);
@@ -254,4 +284,6 @@ canvas.on("mouse:up", (opt) => {
     const placement = savedById[item.id] || item.placement || {};
     await addItemToRoom(item, placement);
   }
+
+  applyEditMode();
 })();
