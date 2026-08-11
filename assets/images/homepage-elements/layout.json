@@ -1,13 +1,13 @@
 {
   "background": {
-    "file": "background.png",
+    "file": "brick.png",
     "width": 1366,
     "height": 768
   },
   "elements": [
     {
       "id": "2",
-      "file": "2.png",
+      "file": "lamp.png",
       "x": 35,
       "y": 161,
       "width": 103,
@@ -17,7 +17,7 @@
     },
     {
       "id": "3",
-      "file": "3.png",
+      "file": "pictureframe.png",
       "x": 63,
       "y": 315,
       "width": 65,
@@ -27,7 +27,7 @@
     },
     {
       "id": "4",
-      "file": "4.png",
+      "file": "tables.png",
       "x": 149,
       "y": 453,
       "width": 944,
@@ -37,7 +37,7 @@
     },
     {
       "id": "5",
-      "file": "5.png",
+      "file": "speakers.png",
       "x": 90,
       "y": 322,
       "width": 1068,
@@ -47,7 +47,7 @@
     },
     {
       "id": "6",
-      "file": "6.png",
+      "file": "couch.png",
       "x": 233,
       "y": 362,
       "width": 763,
@@ -57,7 +57,7 @@
     },
     {
       "id": "7",
-      "file": "7.png",
+      "file": "pillows-blanket.png",
       "x": 336,
       "y": 402,
       "width": 583,
@@ -67,7 +67,7 @@
     },
     {
       "id": "8",
-      "file": "8.png",
+      "file": "phone.png",
       "x": 433,
       "y": 459,
       "width": 81,
@@ -77,7 +77,7 @@
     },
     {
       "id": "10",
-      "file": "10.png",
+      "file": "mirror.png",
       "x": 450,
       "y": 44,
       "width": 321,
@@ -87,7 +87,7 @@
     },
     {
       "id": "11",
-      "file": "11.png",
+      "file": "floor.png",
       "x": 0,
       "y": 575,
       "width": 1366,
@@ -97,7 +97,7 @@
     },
     {
       "id": "12",
-      "file": "12.png",
+      "file": "rug.png",
       "x": 319,
       "y": 636,
       "width": 591,
@@ -107,7 +107,7 @@
     },
     {
       "id": "13",
-      "file": "13.png",
+      "file": "coffeetable.png",
       "x": 346,
       "y": 531,
       "width": 499,
@@ -117,7 +117,7 @@
     },
     {
       "id": "14",
-      "file": "14.png",
+      "file": "water.png",
       "x": 390,
       "y": 479,
       "width": 63,
@@ -127,7 +127,7 @@
     },
     {
       "id": "15",
-      "file": "15.png",
+      "file": "notebook.png",
       "x": 484,
       "y": 532,
       "width": 71,
@@ -137,7 +137,7 @@
     },
     {
       "id": "16",
-      "file": "16.png",
+      "file": "paint.png",
       "x": 633,
       "y": 452,
       "width": 137,
@@ -147,7 +147,7 @@
     },
     {
       "id": "17",
-      "file": "17.png",
+      "file": "golfclub.png",
       "x": 1135,
       "y": 321,
       "width": 80,
@@ -157,7 +157,7 @@
     },
     {
       "id": "18",
-      "file": "18.png",
+      "file": "bookshelf.png",
       "x": 1180,
       "y": 138,
       "width": 186,
@@ -167,7 +167,7 @@
     },
     {
       "id": "19",
-      "file": "19.png",
+      "file": "books.png",
       "x": 1202,
       "y": 88,
       "width": 164,
@@ -177,7 +177,7 @@
     },
     {
       "id": "20",
-      "file": "20.png",
+      "file": "corks.png",
       "x": 1217,
       "y": 138,
       "width": 79,
@@ -187,7 +187,7 @@
     },
     {
       "id": "21",
-      "file": "21.png",
+      "file": "bubbles-duck.png",
       "x": 1288,
       "y": 420,
       "width": 37,

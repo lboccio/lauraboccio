@@ -1,9 +1,10 @@
 // Shared room editor, used by every room page (home, kitchen, bedroom, etc.)
 // Loads inventory.json, lets you add items to the room canvas, strips their
 // background client-side (unless already pre-cut), and makes them
-// draggable/rotatable/resizable/clickable via Fabric.js. Layout is
-// persisted per-room in localStorage for now — there's no backend yet, so
-// this doesn't sync across devices.
+// draggable/rotatable/resizable/clickable via Fabric.js. Clicking an item
+// (without dragging it) opens its `link`, if it has one, in a new tab.
+// Layout is persisted per-room in localStorage for now — there's no
+// backend yet, so this doesn't sync across devices.
 
 const ROOM = document.body.dataset.room;
 const BASE = document.body.dataset.base ?? "";
@@ -11,19 +12,28 @@ const FIXED_WIDTH = Number(document.body.dataset.width) || null;
 const FIXED_HEIGHT = Number(document.body.dataset.height) || null;
 const BACKGROUND = document.body.dataset.background || null;
 const STORAGE_KEY = `room-layout:${ROOM}`;
+const CLICK_DRAG_THRESHOLD = 4; // px of movement below which a mouseup counts as a click, not a drag
 
 const canvas = new fabric.Canvas("room-canvas", { selection: true });
 canvas.perPixelTargetFind = true;
 canvas.targetFindTolerance = 4;
 
+let itemsById = {};
+
 function resizeCanvas() {
+  const wrapper = document.getElementById("canvas-wrapper");
+  const w = wrapper.clientWidth;
+  const h = wrapper.clientHeight;
+  canvas.setWidth(w);
+  canvas.setHeight(h);
+
   if (FIXED_WIDTH && FIXED_HEIGHT) {
-    canvas.setWidth(FIXED_WIDTH);
-    canvas.setHeight(FIXED_HEIGHT);
-  } else {
-    const wrapper = document.getElementById("canvas-wrapper");
-    canvas.setWidth(wrapper.clientWidth);
-    canvas.setHeight(wrapper.clientHeight);
+    // Scale the fixed-size design to cover the full wrapper (crop overflow,
+    // never letterbox), same idea as CSS background-size: cover.
+    const scale = Math.max(w / FIXED_WIDTH, h / FIXED_HEIGHT);
+    const offsetX = (w - FIXED_WIDTH * scale) / 2;
+    const offsetY = (h - FIXED_HEIGHT * scale) / 2;
+    canvas.setViewportTransform([scale, 0, 0, scale, offsetX, offsetY]);
   }
   canvas.renderAll();
 }
@@ -42,8 +52,8 @@ function loadBackground() {
   if (!BACKGROUND) return;
   fabric.Image.fromURL(`${BASE}${BACKGROUND}`, (img) => {
     canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-      scaleX: canvas.getWidth() / img.width,
-      scaleY: canvas.getHeight() / img.height,
+      scaleX: 1,
+      scaleY: 1,
       originX: "left",
       originY: "top",
     });
@@ -133,11 +143,29 @@ function renderInventorySidebar(items) {
 
 canvas.on("object:modified", saveLayout);
 
+let mouseDownPoint = null;
+canvas.on("mouse:down", (opt) => {
+  mouseDownPoint = canvas.getPointer(opt.e);
+});
+canvas.on("mouse:up", (opt) => {
+  if (!opt.target || !mouseDownPoint) return;
+  const upPoint = canvas.getPointer(opt.e);
+  const dist = Math.hypot(upPoint.x - mouseDownPoint.x, upPoint.y - mouseDownPoint.y);
+  mouseDownPoint = null;
+  if (dist > CLICK_DRAG_THRESHOLD) return; // was a drag, not a click
+
+  const item = itemsById[opt.target.itemId];
+  if (item && item.link) {
+    window.open(item.link, "_blank", "noopener");
+  }
+});
+
 (async function init() {
   resizeCanvas();
   loadBackground();
 
   const inventory = await loadInventory();
+  itemsById = Object.fromEntries(inventory.map((i) => [i.id, i]));
   renderInventorySidebar(inventory);
 
   const savedLayout = loadLayout();

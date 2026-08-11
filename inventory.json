@@ -1,10 +1,10 @@
 [
   {
     "id": "home-2",
-    "name": "Living room element 2",
+    "name": "Floor Lamp",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/2.png",
+    "photo": "assets/images/homepage-elements/lamp.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -25,10 +25,10 @@
   },
   {
     "id": "home-3",
-    "name": "Living room element 3",
+    "name": "Picture Frame",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/3.png",
+    "photo": "assets/images/homepage-elements/pictureframe.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -49,10 +49,10 @@
   },
   {
     "id": "home-4",
-    "name": "Living room element 4",
+    "name": "Side Tables",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/4.png",
+    "photo": "assets/images/homepage-elements/tables.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -73,10 +73,10 @@
   },
   {
     "id": "home-5",
-    "name": "Living room element 5",
+    "name": "Speakers",
     "brand": null,
-    "link": null,
-    "photo": "assets/images/homepage-elements/5.png",
+    "link": "https://spotify.com",
+    "photo": "assets/images/homepage-elements/speakers.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -97,10 +97,10 @@
   },
   {
     "id": "home-6",
-    "name": "Living room element 6",
+    "name": "Couch",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/6.png",
+    "photo": "assets/images/homepage-elements/couch.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -121,10 +121,10 @@
   },
   {
     "id": "home-7",
-    "name": "Living room element 7",
+    "name": "Pillows & Blanket",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/7.png",
+    "photo": "assets/images/homepage-elements/pillows-blanket.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -145,10 +145,10 @@
   },
   {
     "id": "home-8",
-    "name": "Living room element 8",
+    "name": "Phone",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/8.png",
+    "photo": "assets/images/homepage-elements/phone.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -169,10 +169,10 @@
   },
   {
     "id": "home-10",
-    "name": "Living room element 10",
+    "name": "Wall Mirror",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/10.png",
+    "photo": "assets/images/homepage-elements/mirror.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -193,10 +193,10 @@
   },
   {
     "id": "home-11",
-    "name": "Living room element 11",
+    "name": "Floor",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/11.png",
+    "photo": "assets/images/homepage-elements/floor.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -217,10 +217,10 @@
   },
   {
     "id": "home-12",
-    "name": "Living room element 12",
+    "name": "Rug",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/12.png",
+    "photo": "assets/images/homepage-elements/rug.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -241,10 +241,10 @@
   },
   {
     "id": "home-13",
-    "name": "Living room element 13",
+    "name": "Coffee Table",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/13.png",
+    "photo": "assets/images/homepage-elements/coffeetable.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -265,10 +265,10 @@
   },
   {
     "id": "home-14",
-    "name": "Living room element 14",
+    "name": "Glass of Water",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/14.png",
+    "photo": "assets/images/homepage-elements/water.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -289,10 +289,10 @@
   },
   {
     "id": "home-15",
-    "name": "Living room element 15",
+    "name": "Notebook",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/15.png",
+    "photo": "assets/images/homepage-elements/notebook.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -313,10 +313,10 @@
   },
   {
     "id": "home-16",
-    "name": "Living room element 16",
+    "name": "Paint Palette",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/16.png",
+    "photo": "assets/images/homepage-elements/paint.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -337,10 +337,10 @@
   },
   {
     "id": "home-17",
-    "name": "Living room element 17",
+    "name": "Golf Club",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/17.png",
+    "photo": "assets/images/homepage-elements/golfclub.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -361,10 +361,10 @@
   },
   {
     "id": "home-18",
-    "name": "Living room element 18",
+    "name": "Bookshelf",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/18.png",
+    "photo": "assets/images/homepage-elements/bookshelf.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -385,10 +385,10 @@
   },
   {
     "id": "home-19",
-    "name": "Living room element 19",
+    "name": "Books",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/19.png",
+    "photo": "assets/images/homepage-elements/books.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -409,10 +409,10 @@
   },
   {
     "id": "home-20",
-    "name": "Living room element 20",
+    "name": "Wine Corks",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/20.png",
+    "photo": "assets/images/homepage-elements/corks.png",
     "dimensions": {
       "width": null,
       "height": null,
@@ -433,10 +433,10 @@
   },
   {
     "id": "home-21",
-    "name": "Living room element 21",
+    "name": "Rubber Duck",
     "brand": null,
     "link": null,
-    "photo": "assets/images/homepage-elements/21.png",
+    "photo": "assets/images/homepage-elements/bubbles-duck.png",
     "dimensions": {
       "width": null,
       "height": null,
