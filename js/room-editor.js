@@ -3,6 +3,9 @@
 // background client-side (unless already pre-cut), and makes them
 // draggable/rotatable/resizable/clickable via Fabric.js. Clicking an item
 // (without dragging it) opens its `link`, if it has one, in a new tab.
+// In edit mode, the sidebar's "On Canvas" list is drag-reorderable — top
+// of the list is the front-most layer, bottom is the back-most, and
+// dragging an entry there re-orders the matching canvas object.
 // Layout is persisted per-room in localStorage for now — there's no
 // backend yet, so this doesn't sync across devices.
 
@@ -13,6 +16,7 @@ const FIXED_HEIGHT = Number(document.body.dataset.height) || null;
 const BACKGROUND = document.body.dataset.background || null;
 const STORAGE_KEY = `room-layout:${ROOM}`;
 const EDIT_MODE_KEY = `room-edit-mode:${ROOM}`;
+const OVERRIDES_KEY = `item-overrides:${ROOM}`;
 const CLICK_DRAG_THRESHOLD = 4; // px of movement below which a mouseup counts as a click, not a drag
 
 const canvas = new fabric.Canvas("room-canvas", { selection: true });
@@ -20,7 +24,93 @@ canvas.perPixelTargetFind = true;
 canvas.targetFindTolerance = 4;
 
 let itemsById = {};
+let inventoryCache = [];
 let editMode = localStorage.getItem(EDIT_MODE_KEY) === "1";
+let dragSrcId = null;
+
+let history = [];
+let historyIndex = -1;
+let isRestoring = false;
+let initializing = true;
+
+function snapshotState() {
+  return canvas.getObjects().map((obj) => ({
+    itemId: obj.itemId,
+    left: obj.left,
+    top: obj.top,
+    angle: obj.angle,
+    scaleX: obj.scaleX,
+    scaleY: obj.scaleY,
+  }));
+}
+
+function pushHistory() {
+  if (isRestoring || initializing) return;
+  history = history.slice(0, historyIndex + 1);
+  history.push(snapshotState());
+  historyIndex = history.length - 1;
+  updateUndoRedoButtons();
+}
+
+function updateUndoRedoButtons() {
+  const undoBtn = document.getElementById("undo-btn");
+  const redoBtn = document.getElementById("redo-btn");
+  if (undoBtn) undoBtn.disabled = historyIndex <= 0;
+  if (redoBtn) redoBtn.disabled = historyIndex >= history.length - 1;
+}
+
+async function restoreSnapshot(snapshot) {
+  isRestoring = true;
+  const snapshotIds = new Set(snapshot.map((s) => s.itemId));
+
+  for (const obj of [...canvas.getObjects()]) {
+    if (!snapshotIds.has(obj.itemId)) canvas.remove(obj);
+  }
+
+  for (const state of snapshot) {
+    let obj = canvas.getObjects().find((o) => o.itemId === state.itemId);
+    if (!obj) {
+      const item = itemsById[state.itemId];
+      if (item) {
+        await addItemToRoom(item, state);
+        obj = canvas.getObjects().find((o) => o.itemId === state.itemId);
+      }
+    }
+    if (obj) {
+      obj.set({
+        left: state.left,
+        top: state.top,
+        angle: state.angle,
+        scaleX: state.scaleX,
+        scaleY: state.scaleY,
+      });
+    }
+  }
+
+  snapshot.forEach((state, index) => {
+    const obj = canvas.getObjects().find((o) => o.itemId === state.itemId);
+    if (obj) canvas.moveTo(obj, index);
+  });
+
+  canvas.renderAll();
+  saveLayout();
+  renderSidebar();
+  isRestoring = false;
+}
+
+function undo() {
+  if (historyIndex <= 0) return;
+  historyIndex -= 1;
+  restoreSnapshot(history[historyIndex]);
+  updateUndoRedoButtons();
+}
+
+function redo() {
+  if (historyIndex >= history.length - 1) return;
+  historyIndex += 1;
+  restoreSnapshot(history[historyIndex]);
+  updateUndoRedoButtons();
+}
 
 function resizeCanvas() {
   const wrapper = document.getElementById("canvas-wrapper");
@@ -79,6 +169,22 @@ function loadLayout() {
   return raw ? JSON.parse(raw) : [];
 }
 
+function loadOverrides() {
+  const raw = localStorage.getItem(OVERRIDES_KEY);
+  return raw ? JSON.parse(raw) : {};
+}
+
+function saveOverride(itemId, patch) {
+  const overrides = loadOverrides();
+  overrides[itemId] = { ...(overrides[itemId] || {}), ...patch };
+  localStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides));
+}
+
+function applyOverrides(inventory) {
+  const overrides = loadOverrides();
+  return inventory.map((item) => (overrides[item.id] ? { ...item, ...overrides[item.id] } : item));
+}
+
 async function removeBackground(imageUrl) {
   const { removeBackground } = await import(
     "https://esm.sh/@imgly/background-removal@1.5.5"
@@ -100,49 +206,127 @@ async function addItemToRoom(item, placement = {}) {
     }
   }
 
-  fabric.Image.fromURL(
-    src,
-    (img) => {
-      img.set({
-        left: placement.left ?? 100,
-        top: placement.top ?? 100,
-        angle: placement.angle ?? 0,
-        scaleX: placement.scaleX ?? 0.3,
-        scaleY: placement.scaleY ?? 0.3,
-        cornerStyle: "circle",
-        transparentCorners: false,
-        selectable: editMode,
-        hoverCursor: editMode ? "move" : (item.link ? "pointer" : "default"),
-      });
-      img.itemId = item.id;
-      canvas.add(img);
-      canvas.renderAll();
-      saveLayout();
-      if (statusEl) statusEl.textContent = "Added";
-    },
-    { crossOrigin: "anonymous" }
-  );
+  await new Promise((resolve) => {
+    fabric.Image.fromURL(
+      src,
+      (img) => {
+        img.set({
+          left: placement.left ?? 100,
+          top: placement.top ?? 100,
+          angle: placement.angle ?? 0,
+          scaleX: placement.scaleX ?? 0.3,
+          scaleY: placement.scaleY ?? 0.3,
+          cornerStyle: "circle",
+          transparentCorners: false,
+          selectable: editMode,
+          hoverCursor: editMode ? "move" : (item.link ? "pointer" : "default"),
+        });
+        img.itemId = item.id;
+        canvas.add(img);
+        canvas.renderAll();
+        saveLayout();
+        resolve();
+      },
+      { crossOrigin: "anonymous" }
+    );
+  });
 }
 
-function renderInventorySidebar(items) {
-  const list = document.getElementById("inventory-list");
-  if (!list) return;
-  const available = items.filter((item) => !item.room || item.room === ROOM);
-  list.innerHTML = "";
-  available.forEach((item) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <img src="${photoUrl(item)}" alt="${item.name}" />
-      <div class="item-info">
-        <div class="item-name">${item.name}</div>
-        <div class="item-brand">${item.brand || ""}</div>
-        <button data-id="${item.id}">Add to room</button>
-        <span id="status-${item.id}" class="status"></span>
-      </div>
-    `;
-    li.querySelector("button").addEventListener("click", () => addItemToRoom(item));
-    list.appendChild(li);
+function attachLayerDragHandlers(li) {
+  li.addEventListener("dragstart", () => {
+    dragSrcId = li.dataset.itemId;
+    li.classList.add("dragging");
   });
+  li.addEventListener("dragend", () => {
+    li.classList.remove("dragging");
+    dragSrcId = null;
+  });
+  li.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+  li.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const targetId = li.dataset.itemId;
+    if (!dragSrcId || dragSrcId === targetId) return;
+    reorderCanvasItems(dragSrcId, targetId);
+  });
+}
+
+function reorderCanvasItems(srcId, targetId) {
+  const list = document.getElementById("canvas-items-list");
+  if (!list) return;
+  const order = [...list.children].map((li) => li.dataset.itemId); // current front-to-back order
+  const fromIdx = order.indexOf(srcId);
+  const toIdx = order.indexOf(targetId);
+  if (fromIdx === -1 || toIdx === -1) return;
+  order.splice(fromIdx, 1);
+  order.splice(toIdx, 0, srcId);
+  applyZOrder(order);
+}
+
+function applyZOrder(frontToBackIds) {
+  // The list is displayed front-to-back (top = front); Fabric's object
+  // array is back-to-front (index 0 = back-most), so reverse before
+  // assigning indexes.
+  const backToFrontIds = [...frontToBackIds].reverse();
+  backToFrontIds.forEach((id, index) => {
+    const obj = canvas.getObjects().find((o) => o.itemId === id);
+    if (obj) canvas.moveTo(obj, index);
+  });
+  canvas.renderAll();
+  saveLayout();
+  renderSidebar();
+  pushHistory();
+}
+
+function renderSidebar() {
+  const canvasList = document.getElementById("canvas-items-list");
+  const availableList = document.getElementById("inventory-list");
+  const canvasIds = new Set(canvas.getObjects().map((obj) => obj.itemId));
+
+  if (canvasList) {
+    const frontToBack = [...canvas.getObjects()].reverse();
+    canvasList.innerHTML = "";
+    frontToBack.forEach((obj) => {
+      const item = itemsById[obj.itemId];
+      if (!item) return;
+      const li = document.createElement("li");
+      li.className = "layer-item";
+      li.draggable = true;
+      li.dataset.itemId = item.id;
+      li.innerHTML = `
+        <img src="${photoUrl(item)}" alt="${item.name}" />
+        <span class="item-name">${item.name}</span>
+      `;
+      attachLayerDragHandlers(li);
+      canvasList.appendChild(li);
+    });
+  }
+
+  if (availableList) {
+    const available = inventoryCache.filter(
+      (item) => (!item.room || item.room === ROOM) && !canvasIds.has(item.id)
+    );
+    availableList.innerHTML = "";
+    available.forEach((item) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <img src="${photoUrl(item)}" alt="${item.name}" />
+        <div class="item-info">
+          <div class="item-name">${item.name}</div>
+          <div class="item-brand">${item.brand || ""}</div>
+          <button data-id="${item.id}">Add to room</button>
+          <span id="status-${item.id}" class="status"></span>
+        </div>
+      `;
+      li.querySelector("button").addEventListener("click", async () => {
+        await addItemToRoom(item);
+        renderSidebar();
+        pushHistory();
+      });
+      availableList.appendChild(li);
+    });
+  }
 }
 
 function showSelectionPanel(obj) {
@@ -156,27 +340,52 @@ function showSelectionPanel(obj) {
     <button id="btn-backward">Backward</button>
     <button id="btn-back">Send to Back</button>
     <button id="btn-delete" class="danger">Delete</button>
+    <label class="panel-label">Click action (URL)</label>
+    <input type="text" id="link-input" placeholder="https://..." value="${item && item.link ? item.link : ""}" />
+    <button id="btn-save-link">Save Action</button>
+    <span id="link-save-status" class="status"></span>
   `;
   panel.style.display = "block";
+  if (item) {
+    panel.querySelector("#btn-save-link").onclick = () => {
+      const url = panel.querySelector("#link-input").value.trim();
+      item.link = url || null;
+      saveOverride(item.id, { link: item.link });
+      obj.hoverCursor = editMode ? "move" : (item.link ? "pointer" : "default");
+      const status = panel.querySelector("#link-save-status");
+      if (status) {
+        status.textContent = "Saved";
+        setTimeout(() => { if (status) status.textContent = ""; }, 1500);
+      }
+    };
+  }
   panel.querySelector("#btn-front").onclick = () => {
     canvas.bringToFront(obj);
     canvas.renderAll();
     saveLayout();
+    renderSidebar();
+    pushHistory();
   };
   panel.querySelector("#btn-forward").onclick = () => {
     canvas.bringForward(obj);
     canvas.renderAll();
     saveLayout();
+    renderSidebar();
+    pushHistory();
   };
   panel.querySelector("#btn-backward").onclick = () => {
     canvas.sendBackwards(obj);
     canvas.renderAll();
     saveLayout();
+    renderSidebar();
+    pushHistory();
   };
   panel.querySelector("#btn-back").onclick = () => {
     canvas.sendToBack(obj);
     canvas.renderAll();
     saveLayout();
+    renderSidebar();
+    pushHistory();
   };
   panel.querySelector("#btn-delete").onclick = () => {
     canvas.remove(obj);
@@ -184,6 +393,8 @@ function showSelectionPanel(obj) {
     canvas.renderAll();
     saveLayout();
     hideSelectionPanel();
+    renderSidebar();
+    pushHistory();
   };
 }
 
@@ -246,7 +457,13 @@ document.getElementById("reset-layout")?.addEventListener("click", () => {
   }
 });
 
-canvas.on("object:modified", saveLayout);
+document.getElementById("undo-btn")?.addEventListener("click", undo);
+document.getElementById("redo-btn")?.addEventListener("click", redo);
+
+canvas.on("object:modified", () => {
+  saveLayout();
+  pushHistory();
+});
 canvas.on("selection:created", (e) => showSelectionPanel(e.selected[0]));
 canvas.on("selection:updated", (e) => showSelectionPanel(e.selected[0]));
 canvas.on("selection:cleared", hideSelectionPanel);
@@ -272,9 +489,9 @@ canvas.on("mouse:up", (opt) => {
   resizeCanvas();
   loadBackground();
 
-  const inventory = await loadInventory();
+  const inventory = applyOverrides(await loadInventory());
+  inventoryCache = inventory;
   itemsById = Object.fromEntries(inventory.map((i) => [i.id, i]));
-  renderInventorySidebar(inventory);
 
   const savedLayout = loadLayout();
   const savedById = Object.fromEntries(savedLayout.map((p) => [p.itemId, p]));
@@ -285,5 +502,9 @@ canvas.on("mouse:up", (opt) => {
     await addItemToRoom(item, placement);
   }
 
+  renderSidebar();
   applyEditMode();
+
+  initializing = false;
+  pushHistory(); // baseline state, so the first real change can be undone back to this
 })();

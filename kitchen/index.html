@@ -12,13 +12,21 @@
 </head>
 <body data-room="kitchen" data-base="../">
   <div id="sidebar">
-    <h2>Inventory</h2>
+    <h2>Layers</h2>
+    <p class="sidebar-hint">Drag to reorder — top is front</p>
+    <ul id="canvas-items-list" class="layer-list"></ul>
+
+    <h2>Add to Room</h2>
     <ul id="inventory-list"></ul>
   </div>
   <div id="canvas-wrapper">
     <canvas id="room-canvas"></canvas>
-    <button id="edit-toggle" class="edit-toggle-button">Edit</button>
-    <button id="reset-layout" class="reset-button">Reset Layout</button>
+    <div class="toolbar">
+      <button id="edit-toggle">Edit</button>
+      <button id="undo-btn" class="edit-mode-only" disabled>Undo</button>
+      <button id="redo-btn" class="edit-mode-only" disabled>Redo</button>
+      <button id="reset-layout" class="edit-mode-only">Reset Layout</button>
+    </div>
     <div id="selection-panel" class="floating-panel"></div>
   </div>
   <div id="link-confirm-overlay" class="modal-overlay">

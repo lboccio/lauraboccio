@@ -3,12 +3,14 @@ html, body { width: 100%; height: 100%; font-family: sans-serif; background: #11
 body { display: flex; }
 
 body:not(.edit-mode) #sidebar,
-body:not(.edit-mode) #reset-layout {
+body:not(.edit-mode) .edit-mode-only {
   display: none;
 }
 
 #sidebar { width: 280px; background: #1a1a1a; padding: 16px; overflow-y: auto; height: 100vh; }
-#sidebar h2 { font-size: 16px; margin-bottom: 12px; }
+#sidebar h2 { font-size: 16px; margin-bottom: 4px; }
+#sidebar h2:not(:first-child) { margin-top: 20px; }
+.sidebar-hint { font-size: 11px; color: #888; margin-bottom: 10px; }
 #inventory-list { list-style: none; }
 #inventory-list li { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
 #inventory-list img { width: 48px; height: 48px; object-fit: contain; border-radius: 4px; background: #333; }
@@ -18,6 +20,22 @@ body:not(.edit-mode) #reset-layout {
 .item-info button { margin-top: 4px; font-size: 11px; padding: 2px 6px; cursor: pointer; }
 .status { font-size: 10px; color: #6cf; margin-left: 4px; }
 
+.layer-list { list-style: none; }
+.layer-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  background: #242424;
+  border-radius: 4px;
+  cursor: grab;
+  border: 1px solid transparent;
+}
+.layer-item img { width: 32px; height: 32px; object-fit: contain; border-radius: 4px; background: #333; }
+.layer-item .item-name { font-size: 12px; font-weight: normal; }
+.layer-item.dragging { opacity: 0.4; border: 1px dashed #6cf; }
+
 #canvas-wrapper {
   flex: 1;
   height: 100vh;
@@ -25,11 +43,15 @@ body:not(.edit-mode) #reset-layout {
   position: relative;
 }
 
-.edit-toggle-button {
+.toolbar {
   position: absolute;
   top: 16px;
   left: 16px;
   z-index: 11;
+  display: flex;
+  gap: 8px;
+}
+.toolbar button {
   background: rgba(20, 20, 20, 0.92);
   color: #fff;
   border: none;
@@ -38,22 +60,9 @@ body:not(.edit-mode) #reset-layout {
   font-size: 12px;
   cursor: pointer;
 }
-.edit-toggle-button:hover { background: #333; }
-
-.reset-button {
-  position: absolute;
-  top: 16px;
-  left: 110px;
-  z-index: 10;
-  background: rgba(20, 20, 20, 0.92);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 12px;
-  cursor: pointer;
-}
-.reset-button:hover { background: #333; }
+.toolbar button:hover { background: #333; }
+.toolbar button:disabled { opacity: 0.35; cursor: default; }
+.toolbar button:disabled:hover { background: rgba(20, 20, 20, 0.92); }
 
 .floating-panel {
   display: none;
@@ -88,6 +97,24 @@ body:not(.edit-mode) #reset-layout {
 .floating-panel button.danger { background: #c0392b; }
 .floating-panel button.danger:hover { background: #e74c3c; }
 .floating-panel button:last-child { margin-bottom: 0; }
+.floating-panel .panel-label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: #999;
+}
+.floating-panel input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  background: #333;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
 
 .modal-overlay {
   display: none;
