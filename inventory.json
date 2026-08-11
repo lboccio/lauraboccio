@@ -1,1 +1,458 @@
-[]
+[
+  {
+    "id": "home-2",
+    "name": "Living room element 2",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/2.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 35,
+      "top": 161,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-3",
+    "name": "Living room element 3",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/3.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 63,
+      "top": 315,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-4",
+    "name": "Living room element 4",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/4.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 149,
+      "top": 453,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-5",
+    "name": "Living room element 5",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/5.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 90,
+      "top": 322,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-6",
+    "name": "Living room element 6",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/6.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 233,
+      "top": 362,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-7",
+    "name": "Living room element 7",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/7.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 336,
+      "top": 402,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-8",
+    "name": "Living room element 8",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/8.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 433,
+      "top": 459,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-10",
+    "name": "Living room element 10",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/10.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 450,
+      "top": 44,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-11",
+    "name": "Living room element 11",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/11.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 0,
+      "top": 575,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-12",
+    "name": "Living room element 12",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/12.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 319,
+      "top": 636,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-13",
+    "name": "Living room element 13",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/13.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 346,
+      "top": 531,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-14",
+    "name": "Living room element 14",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/14.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 390,
+      "top": 479,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-15",
+    "name": "Living room element 15",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/15.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 484,
+      "top": 532,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-16",
+    "name": "Living room element 16",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/16.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 633,
+      "top": 452,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-17",
+    "name": "Living room element 17",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/17.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 1135,
+      "top": 321,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-18",
+    "name": "Living room element 18",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/18.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 1180,
+      "top": 138,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-19",
+    "name": "Living room element 19",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/19.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 1202,
+      "top": 88,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-20",
+    "name": "Living room element 20",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/20.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 1217,
+      "top": 138,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  },
+  {
+    "id": "home-21",
+    "name": "Living room element 21",
+    "brand": null,
+    "link": null,
+    "photo": "assets/images/homepage-elements/21.png",
+    "dimensions": {
+      "width": null,
+      "height": null,
+      "depth": null,
+      "unit": "in"
+    },
+    "manualUrl": null,
+    "room": "home",
+    "isCutout": true,
+    "placement": {
+      "left": 1288,
+      "top": 420,
+      "angle": 0,
+      "scaleX": 1,
+      "scaleY": 1
+    },
+    "addedAt": "2026-08-11T00:00:00.000Z"
+  }
+]

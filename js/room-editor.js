@@ -1,29 +1,53 @@
-// Shared room editor, used by every room page (kitchen, bedroom, etc.)
+// Shared room editor, used by every room page (home, kitchen, bedroom, etc.)
 // Loads inventory.json, lets you add items to the room canvas, strips their
-// background client-side, and makes them draggable/rotatable/resizable via
-// Fabric.js. Layout is persisted per-room in localStorage for now — there's
-// no backend yet, so this doesn't sync across devices.
+// background client-side (unless already pre-cut), and makes them
+// draggable/rotatable/resizable/clickable via Fabric.js. Layout is
+// persisted per-room in localStorage for now — there's no backend yet, so
+// this doesn't sync across devices.
 
 const ROOM = document.body.dataset.room;
+const BASE = document.body.dataset.base ?? "";
+const FIXED_WIDTH = Number(document.body.dataset.width) || null;
+const FIXED_HEIGHT = Number(document.body.dataset.height) || null;
+const BACKGROUND = document.body.dataset.background || null;
 const STORAGE_KEY = `room-layout:${ROOM}`;
 
 const canvas = new fabric.Canvas("room-canvas", { selection: true });
+canvas.perPixelTargetFind = true;
+canvas.targetFindTolerance = 4;
 
 function resizeCanvas() {
-  const wrapper = document.getElementById("canvas-wrapper");
-  canvas.setWidth(wrapper.clientWidth);
-  canvas.setHeight(wrapper.clientHeight);
+  if (FIXED_WIDTH && FIXED_HEIGHT) {
+    canvas.setWidth(FIXED_WIDTH);
+    canvas.setHeight(FIXED_HEIGHT);
+  } else {
+    const wrapper = document.getElementById("canvas-wrapper");
+    canvas.setWidth(wrapper.clientWidth);
+    canvas.setHeight(wrapper.clientHeight);
+  }
   canvas.renderAll();
 }
 window.addEventListener("resize", resizeCanvas);
 
 function photoUrl(item) {
-  return `../${item.photo}`;
+  return `${BASE}${item.photo}`;
 }
 
 async function loadInventory() {
-  const res = await fetch("../inventory.json");
+  const res = await fetch(`${BASE}inventory.json`);
   return res.json();
+}
+
+function loadBackground() {
+  if (!BACKGROUND) return;
+  fabric.Image.fromURL(`${BASE}${BACKGROUND}`, (img) => {
+    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+      scaleX: canvas.getWidth() / img.width,
+      scaleY: canvas.getHeight() / img.height,
+      originX: "left",
+      originY: "top",
+    });
+  });
 }
 
 function saveLayout() {
@@ -53,13 +77,15 @@ async function removeBackground(imageUrl) {
 
 async function addItemToRoom(item, placement = {}) {
   const statusEl = document.getElementById(`status-${item.id}`);
-  if (statusEl) statusEl.textContent = "Removing background…";
 
   let src = photoUrl(item);
-  try {
-    src = await removeBackground(photoUrl(item));
-  } catch (err) {
-    console.warn("Background removal failed, using original photo:", err);
+  if (!item.isCutout) {
+    if (statusEl) statusEl.textContent = "Removing background…";
+    try {
+      src = await removeBackground(photoUrl(item));
+    } catch (err) {
+      console.warn("Background removal failed, using original photo:", err);
+    }
   }
 
   fabric.Image.fromURL(
@@ -76,7 +102,6 @@ async function addItemToRoom(item, placement = {}) {
       });
       img.itemId = item.id;
       canvas.add(img);
-      canvas.setActiveObject(img);
       canvas.renderAll();
       saveLayout();
       if (statusEl) statusEl.textContent = "Added";
@@ -87,8 +112,10 @@ async function addItemToRoom(item, placement = {}) {
 
 function renderInventorySidebar(items) {
   const list = document.getElementById("inventory-list");
+  if (!list) return;
+  const available = items.filter((item) => !item.room || item.room === ROOM);
   list.innerHTML = "";
-  items.forEach((item) => {
+  available.forEach((item) => {
     const li = document.createElement("li");
     li.innerHTML = `
       <img src="${photoUrl(item)}" alt="${item.name}" />
@@ -108,13 +135,17 @@ canvas.on("object:modified", saveLayout);
 
 (async function init() {
   resizeCanvas();
+  loadBackground();
+
   const inventory = await loadInventory();
   renderInventorySidebar(inventory);
 
-  const layout = loadLayout();
-  const byId = Object.fromEntries(inventory.map((i) => [i.id, i]));
-  for (const placement of layout) {
-    const item = byId[placement.itemId];
-    if (item) await addItemToRoom(item, placement);
+  const savedLayout = loadLayout();
+  const savedById = Object.fromEntries(savedLayout.map((p) => [p.itemId, p]));
+
+  const roomItems = inventory.filter((item) => item.room === ROOM);
+  for (const item of roomItems) {
+    const placement = savedById[item.id] || item.placement || {};
+    await addItemToRoom(item, placement);
   }
 })();
