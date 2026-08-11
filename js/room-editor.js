@@ -141,7 +141,85 @@ function renderInventorySidebar(items) {
   });
 }
 
+function showSelectionPanel(obj) {
+  const panel = document.getElementById("selection-panel");
+  if (!panel) return;
+  const item = itemsById[obj.itemId];
+  panel.innerHTML = `
+    <div class="selection-name">${item ? item.name : "Item"}</div>
+    <button id="btn-front">Bring to Front</button>
+    <button id="btn-forward">Forward</button>
+    <button id="btn-backward">Backward</button>
+    <button id="btn-back">Send to Back</button>
+    <button id="btn-delete" class="danger">Delete</button>
+  `;
+  panel.style.display = "block";
+  panel.querySelector("#btn-front").onclick = () => {
+    canvas.bringToFront(obj);
+    canvas.renderAll();
+    saveLayout();
+  };
+  panel.querySelector("#btn-forward").onclick = () => {
+    canvas.bringForward(obj);
+    canvas.renderAll();
+    saveLayout();
+  };
+  panel.querySelector("#btn-backward").onclick = () => {
+    canvas.sendBackwards(obj);
+    canvas.renderAll();
+    saveLayout();
+  };
+  panel.querySelector("#btn-back").onclick = () => {
+    canvas.sendToBack(obj);
+    canvas.renderAll();
+    saveLayout();
+  };
+  panel.querySelector("#btn-delete").onclick = () => {
+    canvas.remove(obj);
+    canvas.discardActiveObject();
+    canvas.renderAll();
+    saveLayout();
+    hideSelectionPanel();
+  };
+}
+
+function hideSelectionPanel() {
+  const panel = document.getElementById("selection-panel");
+  if (panel) panel.style.display = "none";
+}
+
+function showLinkConfirm(item) {
+  const overlay = document.getElementById("link-confirm-overlay");
+  if (!overlay) {
+    window.open(item.link, "_blank", "noopener");
+    return;
+  }
+  document.getElementById("link-confirm-text").textContent = `Leave this site to visit ${item.name}?`;
+  document.getElementById("link-confirm-url").textContent = item.link;
+  overlay.style.display = "flex";
+
+  const goBtn = document.getElementById("link-confirm-go");
+  const cancelBtn = document.getElementById("link-confirm-cancel");
+  goBtn.onclick = () => {
+    window.open(item.link, "_blank", "noopener");
+    overlay.style.display = "none";
+  };
+  cancelBtn.onclick = () => {
+    overlay.style.display = "none";
+  };
+}
+
+document.getElementById("reset-layout")?.addEventListener("click", () => {
+  if (confirm("Reset this room back to its original layout?")) {
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+});
+
 canvas.on("object:modified", saveLayout);
+canvas.on("selection:created", (e) => showSelectionPanel(e.selected[0]));
+canvas.on("selection:updated", (e) => showSelectionPanel(e.selected[0]));
+canvas.on("selection:cleared", hideSelectionPanel);
 
 let mouseDownPoint = null;
 canvas.on("mouse:down", (opt) => {
@@ -156,7 +234,7 @@ canvas.on("mouse:up", (opt) => {
 
   const item = itemsById[opt.target.itemId];
   if (item && item.link) {
-    window.open(item.link, "_blank", "noopener");
+    showLinkConfirm(item);
   }
 });
 
